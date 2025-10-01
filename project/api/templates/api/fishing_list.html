@@ -1,0 +1,15 @@
+{% extends "api/_base.html" %}
+{% block content %}
+    <h1>Fishing Trips</h1>
+    <ul>
+    {% for trip in trips %}
+        <li>
+        <a href="{% url 'api:fishingtrip-detail' trip.pk %}">
+            {{ trip.date }} — {{ trip.country_code }}
+        </a>
+        </li>
+    {% empty %}
+        <li>No trips yet.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

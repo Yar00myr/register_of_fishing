@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Austria",
+        "code": "AT"
+    },
+    {
+        "name": "Belgium",
+        "code": "BE"
+    },
+    {
+        "name": "Poland",
+        "code": "PL"
+    },
+    {
+        "name": "Slovakia",
+        "code": "SK"
+    },
+    {
+        "name": "Slovenia",
+        "code": "SI"
+    },
+    {
+        "name": "Spain",
+        "code": "ES"
+    },
+    {
+        "name": "Sweden",
+        "code": "SE"
+    },
+    {
+        "name": "Ukraine",
+        "code": "UA"
+    },
+    {
+        "name": "United Kingdom",
+        "code": "GB"
+    },
+    {
+        "name": "United States",
+        "code": "US"
+    }
+]
