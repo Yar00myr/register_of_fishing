@@ -20,6 +20,14 @@ class FishingTrip(models.Model):
     def __str__(self):
         return f"Fishing trip to {self.country_name()} ({self.date})"
 
+    @property
+    def total_weight(self) -> float:
+        return sum((catch.total_weight or 0) for catch in self.catches.all())
+
+    @property
+    def total_fish_amount(self) -> int:
+        return sum(catch.amount for catch in self.catches.all())
+
 
 class Catch(models.Model):
     fishing_trip = models.ForeignKey(
@@ -27,7 +35,12 @@ class Catch(models.Model):
     )
     fish_type = models.CharField(max_length=45)
     weight = models.FloatField(blank=True, null=True)
+    amount = models.PositiveSmallIntegerField(default=0, help_text="Quantity of fish")
     photo = models.ImageField(upload_to="catches/", blank=True, null=True)
 
     def __str__(self):
         return f"{self.fish_type} ({self.weight or '—'} kg)"
+
+    @property
+    def total_weight(self):
+        return (self.weight or 0) * (self.amount or 0)
