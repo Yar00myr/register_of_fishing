@@ -9,11 +9,51 @@
     <div class="mt-3">
         <a class="btn btn-secondary" href="{% url 'api:fishingtrip-list' %}">← Back to list</a>
         <a class="btn btn-warning" href="{% url 'api:fishingtrip-detail' trip.pk %}">Edit</a>
+        <a class="btn btn-secondary" href="#">Add Catch</a>
         <form method="post" action="{% url 'api:fishingtrip-detail' trip.pk %}" style="display:inline;">
             {% csrf_token %}
             <input type="hidden" name="_method" value="delete">
             <button type="submit" class="btn btn-danger">Delete</button>
         </form>
+    </div>
 
+    <div class="mt-4">
+        <table class="table table-bordered table-striped">
+            <caption>Types of fish for fishing</caption>
+
+            <thead class="table-light">
+                <tr>
+                    <th>Type of fish</th>
+                    <th>Amount</th>
+                    <th>Weight per fish (kg)</th>
+                    <th>Total weight (kg)</th>
+                </tr>
+            </thead>
+
+        <tbody>
+            {% for catch in trip.catches.all %}
+                <tr>
+                    <td>{{ catch.fish_type }}</td>
+                    <td>{{ catch.amount }}</td>
+                    <td>{{ catch.weight|default:"—" }}</td>
+                    <td>{{ catch.total_weight }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No catches yet</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+
+        <tfoot class="table-secondary">
+                <tr>
+                    <th scope="row">Totals</th>
+                    <td>{{ trip.total_fish_amount }}</td>
+                    <td></td>
+                    <td>{{ trip.total_weight }}</td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 {% endblock %}

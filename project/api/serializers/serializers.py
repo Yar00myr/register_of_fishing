@@ -3,7 +3,13 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from ..models import FishingTrip, Catch
+from ..models import FishingTrip, FishType, Catch
+
+
+class FishTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FishType
+        fields = ["id", "name"]
 
 
 class CatchSerializer(serializers.ModelSerializer):
@@ -11,14 +17,23 @@ class CatchSerializer(serializers.ModelSerializer):
         model = Catch
         fields = "__all__"
 
+    def validate(self, data):
+        weight = data.get("weight")
+        amount = data.get("amount", 0)
+
+        if amount > 0 and not weight:
+            raise serializers.ValidationError("Weight must be provided if amount > 0")
+
+        return data
+
     def validate_weight(self, value):
         if value is not None and value <= 0:
             raise serializers.ValidationError("Weight must be greater than 0")
         return round(value, 2) if value is not None else value
 
     def validate_fish_type(self, value):
-        if not value.strip():
-            raise serializers.ValidationError("Fish type cannot be empty")
+        if value is None:
+            raise serializers.ValidationError("Fish type must be selected")
         return value
 
     def validate_photo(self, value):
@@ -30,7 +45,7 @@ class CatchSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Photo size must not exceed 10 MB")
 
         valid_formats = ["image/jpeg", "image/png", "image/webp"]
-        if value.content_type not in valid_formats:
+        if hasattr(value, "content_type") and value.content_type not in valid_formats:
             raise serializers.ValidationError(
                 "Only JPEG, PNG, and WEBP formats are allowed"
             )
@@ -44,7 +59,7 @@ class FishingTripSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FishingTrip
-        fields = ["country_code", "country_name", "date", "catches"]
+        fields = ["id", "country_code", "country_name", "date", "catches"]
 
     def create(self, validated_data):
         catches_data = validated_data.pop("catches", [])
@@ -52,6 +67,18 @@ class FishingTripSerializer(serializers.ModelSerializer):
         for catch_data in catches_data:
             Catch.objects.create(fishing_trip=fishing_trip, **catch_data)
         return fishing_trip
+
+    def update(self, instance, validated_data):
+        catches_data = validated_data.pop("catches", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if catches_data is not None:
+            instance.catches.all().delete()
+            for catch_data in catches_data:
+                Catch.objects.create(fishing_trip=instance, **catch_data)
+        return instance
 
     def get_country_name(self, obj):
         return obj.country_name()

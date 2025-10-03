@@ -1,1 +1,6 @@
-from .serializers import CatchSerializer, FishingTripSerializer, LoginSerializer
+from .serializers import (
+    FishTypeSerializer,
+    CatchSerializer,
+    FishingTripSerializer,
+    LoginSerializer,
+)
