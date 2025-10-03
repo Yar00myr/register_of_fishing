@@ -25,7 +25,6 @@ router.register(r"fishtype", FishTypeViewSet, basename="fishtype")
 router.register(r"catch", CatchViewSet, basename="catch")
 
 
-
 urlpatterns = [
     path("api/auth/login/", LoginView.as_view(), name="api-login"),
     path("api/auth/logout/", LogoutView.as_view(), name="api-logout"),
