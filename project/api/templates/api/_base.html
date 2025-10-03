@@ -16,18 +16,26 @@
             <h2 class="mb-0">Fishing Register</h2>
 
             {% if request.user.is_authenticated and request.resolver_match.url_name != 'login' %}
-                <button id="logoutBtn" 
-                        class="btn btn-outline-danger"
-                        data-logout-url="{% url 'api:logout' %}"
-                        data-login-url="{% url 'api:login' %}"
-                        data-csrf-token="{{ csrf_token }}">
-                    Logout
-                </button>
-                <a href="{% url 'api:homepage' %}" class="btn btn-outline-primary"> Home</a>
-                <a href="{% url 'api:fishingtrip-list' %}" class="btn btn-outline-primary">
-                    All Trips
-                </a>
-                <a href="{% url 'api:fishingtrip-add' %}" class="btn btn-success">Add Trip</a>
+                <div class="d-flex align-items-center gap-2">
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="menuDropdown">
+                            <li><a class="dropdown-item" href="{% url 'api:homepage' %}">Home</a></li>
+                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-list' %}">All Trips</a></li>
+                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-add' %}">Add Trip</a></li>
+                        </ul>
+                    </div>
+                    <button id="logoutBtn" 
+                            class="btn btn-outline-danger"
+                            data-logout-url="{% url 'api:logout' %}"
+                            data-login-url="{% url 'api:login' %}"
+                            data-csrf-token="{{ csrf_token }}">
+                        Logout
+                    </button>
+                </div>
             {% endif %}
         </div>
     </header>
@@ -39,6 +47,7 @@
 
     {% block scripts %}
         <script src="{% static 'js/logout.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% endblock %}
 
     {% block extra_css %}
