@@ -4,6 +4,7 @@ from rest_framework import routers
 
 from .views import (
     FishingTripViewSet,
+    FishTypeViewSet,
     LoginView,
     LogoutView,
     homepage_view,
@@ -19,6 +20,8 @@ app_name = "api"
 
 router = routers.SimpleRouter()
 router.register(r"fishingtrip", FishingTripViewSet, basename="fishingtrip")
+router.register(r"fishtype", FishTypeViewSet, basename="fishtype")
+
 
 urlpatterns = [
     path("api/auth/login/", LoginView.as_view(), name="api-login"),

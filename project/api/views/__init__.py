@@ -1,4 +1,5 @@
 from .auth import LoginView, LogoutView
+from .fish_type import FishTypeViewSet
 from .home import FishingTripViewSet
 from .views import (
     homepage_view,

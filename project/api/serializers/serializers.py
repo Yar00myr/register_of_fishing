@@ -3,7 +3,13 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from ..models import FishingTrip, Catch
+from ..models import FishingTrip, FishType, Catch
+
+
+class FishTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FishType
+        fields = ["id", "name"]
 
 
 class CatchSerializer(serializers.ModelSerializer):
