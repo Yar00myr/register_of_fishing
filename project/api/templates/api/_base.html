@@ -70,11 +70,14 @@
             </div>
 
             <h5 class="mt-4">Available Fish Types:</h5>
-            <ul id="fishList">
+
+            <ul id="fishList" class="list-group">
                 {% for fish in fish_types %}
-                    <li>{{ fish.name }}</li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        🐟 {{ fish.name }}
+                    </li>
                 {% empty %}
-                    <li>No fish types yet.</li>
+                    <li class="list-group-item text-muted">No fish types yet.</li>
                 {% endfor %}
             </ul>
         </footer>
