@@ -45,27 +45,40 @@
         {% endblock %}
     </main>
 
-    <footer class="mt-5 p-3 border-top bg-light">
-        <h3>Add Fish Type</h3>
+    {% if request.resolver_match.url_name == 'homepage' %}
+        <footer class="mt-5 p-3 border-top bg-light">
+            <h3>
+                <button class="btn btn-link text-decoration-none" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#fishFormCollapse" 
+                        aria-expanded="false" 
+                        aria-controls="fishFormCollapse">
+                    ➕ Add Fish Type
+                </button>
+            </h3>
 
-        <form id="fishTypeForm" method="post" enctype="multipart/form-data" 
-            data-url="{% url 'api:new_fish_type' %}">
-            {% csrf_token %}
-            {{ fish_type_form.as_p }}
-            <button type="submit" class="btn btn-primary">Add Fish</button>
-        </form>
+            <div class="collapse" id="fishFormCollapse">
+                <form id="fishTypeForm" method="post" enctype="multipart/form-data"
+                    data-url="{% url 'api:new_fish_type' %}" class="mt-3">
+                    {% csrf_token %}
+                    {{ fish_type_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Add Fish</button>
+                </form>
 
-        <div id="fishMessage" class="mt-3"></div>
+                <div id="fishMessage" class="mt-3"></div>
+            </div>
 
-        <h5 class="mt-4">Available Fish Types:</h5>
-        <ul id="fishList">
-            {% for fish in fish_types %}
-                <li>{{ fish.name }}</li>
-            {% empty %}
-                <li>No fish types yet.</li>
-            {% endfor %}
-        </ul>
-    </footer>
+            <h5 class="mt-4">Available Fish Types:</h5>
+            <ul id="fishList">
+                {% for fish in fish_types %}
+                    <li>{{ fish.name }}</li>
+                {% empty %}
+                    <li>No fish types yet.</li>
+                {% endfor %}
+            </ul>
+        </footer>
+    {% endif %}
 
     {% block scripts %}
         <script src="{% static 'js/logout.js' %}"></script>
