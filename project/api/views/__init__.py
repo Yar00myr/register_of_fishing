@@ -9,4 +9,5 @@ from .views import (
     add_trip_view,
     trips_list_view,
     trip_detail_view,
+    new_fish_type,
 )
