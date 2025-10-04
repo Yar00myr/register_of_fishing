@@ -1,9 +1,11 @@
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
-from ..forms import FishingTripForm, CatchFormSet
-from ..models import FishingTrip
+from ..forms import FishingTripForm, CatchFormSet, FishTypeForm
+from ..models import FishingTrip, FishType
 
 
 def login_page(request):
@@ -17,7 +19,13 @@ def logout_page(request):
 
 @login_required(login_url="api:login")
 def homepage_view(request):
-    return render(request, "api/_base.html")
+    fish_types = FishType.objects.all()
+    fish_type_form = FishTypeForm()
+    return render(
+        request,
+        "api/_base.html",
+        {"fish_types": fish_types, "fish_type_form": fish_type_form},
+    )
 
 
 @login_required(login_url="api:login")
@@ -54,3 +62,21 @@ def trips_list_view(request):
 def trip_detail_view(request, pk):
     trip = get_object_or_404(FishingTrip.objects.prefetch_related("catches"), pk=pk)
     return render(request, "api/fishing_detail.html", {"trip": trip})
+
+
+@login_required(login_url="api:login")
+@require_POST
+def new_fish_type(request):
+    form = FishTypeForm(request.POST)
+    if form.is_valid():
+        fish = form.save()
+        return JsonResponse(
+            {
+                "success": True,
+                "name": fish.name,
+                "id": fish.id,
+                "message": f"Fish type '{fish.name}' added successfully!",
+            }
+        )
+    else:
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)

@@ -14,6 +14,7 @@ from .views import (
     add_trip_view,
     trips_list_view,
     trip_detail_view,
+    new_fish_type,
 )
 
 
@@ -35,4 +36,5 @@ urlpatterns = [
     path("trips/add/", add_trip_view, name="fishingtrip-add"),
     path("trips/", trips_list_view, name="fishingtrip-list"),
     path("trips<int:pk>/", trip_detail_view, name="fishingtrip-detail"),
+    path("fish/add/", new_fish_type, name="new_fish_type"),
 ]
