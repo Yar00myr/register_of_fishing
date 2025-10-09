@@ -17,7 +17,7 @@ class FishingTripForm(forms.ModelForm):
 
     def clean_date(self):
         date = self.cleaned_data["date"]
-        if date > datetime.date.today():
+        if date > date.today():
             raise forms.ValidationError("The date cannot be in the future.")
         return date
 

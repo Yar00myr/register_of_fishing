@@ -31,11 +31,17 @@
             </thead>
 
         <tbody>
-            {% for catch in trip.catches.all %}
+            {% for catch in grouped_catches %}
                 <tr>
                     <td>{{ catch.fish_type }}</td>
                     <td>{{ catch.amount }}</td>
-                    <td>{{ catch.weight|default:"—" }}</td>
+                    <td>
+                        {% if catch.weights %}
+                            {{ catch.weights|join:", " }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
                     <td>{{ catch.total_weight }}</td>
                 </tr>
             {% empty %}
@@ -49,9 +55,9 @@
         <tfoot class="table-secondary">
                 <tr>
                     <th scope="row">Totals</th>
-                    <td>{{ trip.total_fish_amount }}</td>
+                    <td><strong>{{ trip.total_fish_amount }}</strong></td>
                     <td></td>
-                    <td>{{ trip.total_weight }}</td>
+                    <td><strong>{{ trip.total_weight|floatformat:2 }} kg</strong></td>
                 </tr>
             </tfoot>
         </table>

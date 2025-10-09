@@ -53,7 +53,7 @@ class Catch(models.Model):
         FishType, on_delete=models.CASCADE, related_name="catches"
     )
     weight = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    amount = models.PositiveSmallIntegerField(default=0, help_text="Quantity of fish")
+    amount = models.PositiveSmallIntegerField(default=1, help_text="Quantity of fish")
     photo = models.ImageField(upload_to="catches/", blank=True, null=True)
 
     def __str__(self):
