@@ -24,10 +24,16 @@ def logout_page(request):
 def homepage_view(request):
     fish_types = FishType.objects.all()
     fish_type_form = FishTypeForm()
+    total_fish = FishingTrip.total_fish_all_trips()
+    context = {
+        "fish_types": fish_types,
+        "fish_type_form": fish_type_form,
+        "total_fish": total_fish,
+    }
     return render(
         request,
         "api/_base.html",
-        {"fish_types": fish_types, "fish_type_form": fish_type_form},
+        context=context,
     )
 
 

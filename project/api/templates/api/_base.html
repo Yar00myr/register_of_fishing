@@ -41,6 +41,12 @@
     </header>
 
     <main class="container mt-4">
+
+        <div class="mb-4 p-3 bg-light border rounded text-center shadow-sm">
+            <h4 class="mb-1">🎣 Total Fish Caught</h4>
+            <p class="display-6 fw-bold text-primary">{{ total_fish }}</p>
+        </div>
+
         {% block content %}
         {% endblock %}
     </main>

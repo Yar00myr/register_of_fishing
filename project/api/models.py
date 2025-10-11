@@ -33,6 +33,10 @@ class FishingTrip(models.Model):
     def total_fish_amount(self) -> int:
         return self.catches.aggregate(total=Sum("amount"))["total"] or 0
 
+    @classmethod
+    def total_fish_all_trips(cls) -> int:
+        return cls.objects.aggregate(total=Sum("catches__amount"))["total"] or 0
+
 
 class FishType(models.Model):
     name = models.CharField(max_length=45, unique=True, blank=False)
