@@ -1,15 +1,19 @@
 {% extends "api/_base.html" %}
 {% block content %}
     <h1>Fishing Trips</h1>
-    <ul>
-    {% for trip in trips %}
-        <li>
-        <a href="{% url 'api:fishingtrip-detail' trip.pk %}">
-            {{ trip.date }} — {{ trip.country_code }}
-        </a>
-        </li>
-    {% empty %}
-        <li>No trips yet.</li>
-    {% endfor %}
-    </ul>
+    <div class="list-group">
+        <ul>
+            {% for trip in trips %}
+                <li>
+                <a 
+                href="{% url 'api:fishingtrip-detail' trip.pk %}"
+                class="list-group-item list-group-item-action">
+                    {{ trip.date }} — {{ trip.country_code }}
+                </a>
+                </li>
+            {% empty %}
+                <li>No trips yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
