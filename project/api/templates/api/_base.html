@@ -42,9 +42,19 @@
 
     <main class="container mt-4">
 
-        <div class="mb-4 p-3 bg-light border rounded text-center shadow-sm">
-            <h4 class="mb-1">🎣 Total Fish Caught</h4>
-            <p class="display-6 fw-bold text-primary">{{ total_fish }}</p>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="p-3 bg-light border rounded text-center shadow-sm">
+                    <h5>🎣 Total Fish Caught</h5>
+                    <p class="display-6 fw-bold text-primary">{{ total_fish }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-light border rounded text-center shadow-sm">
+                    <h5>⚖️ Total Weight</h5>
+                    <p class="display-6 fw-bold text-success">{{ total_weight|floatformat:2 }} kg</p>
+                </div>
+            </div>
         </div>
 
         {% block content %}

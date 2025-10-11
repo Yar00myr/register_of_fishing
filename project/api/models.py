@@ -34,8 +34,17 @@ class FishingTrip(models.Model):
         return self.catches.aggregate(total=Sum("amount"))["total"] or 0
 
     @classmethod
-    def total_fish_all_trips(cls) -> int:
-        return cls.objects.aggregate(total=Sum("catches__amount"))["total"] or 0
+    def total_stats(cls) -> dict:
+        result = cls.objects.aggregate(
+            total_fish=Sum("catches__amount"),
+            total_weight=Sum(
+                F("catches__weight") * F("catches__amount"), output_field=DecimalField()
+            ),
+        )
+        return {
+            "total_fish": result["total_fish"] or 0,
+            "total_weight": result["total_weight"] or 0,
+        }
 
 
 class FishType(models.Model):
