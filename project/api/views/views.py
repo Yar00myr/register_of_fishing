@@ -57,7 +57,7 @@ def add_trip_view(request):
 
 @login_required(login_url="api:login")
 def trips_list_view(request):
-    trips = FishingTrip.objects.all().prefetch_related("catches")
+    trips = FishingTrip.objects.all().prefetch_related("catches").order_by("date")
     return render(request, "api/fishing_list.html", {"trips": trips})
 
 
