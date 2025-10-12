@@ -33,7 +33,7 @@ def homepage_view(request):
     }
     return render(
         request,
-        "api/_base.html",
+        "api/homepage.html",
         context=context,
     )
 
