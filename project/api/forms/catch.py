@@ -1,5 +1,3 @@
-import datetime
-
 from django import forms
 from django.forms import inlineformset_factory
 from ..models import FishingTrip, Catch
@@ -34,4 +32,5 @@ CatchFormSet = inlineformset_factory(
     Catch,
     form=CatchForm,
     can_delete=False,
+    extra=0,
 )
