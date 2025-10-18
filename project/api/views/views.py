@@ -42,7 +42,7 @@ def homepage_view(request):
 def add_trip_view(request):
     if request.method == "POST":
         trip_form = FishingTripForm(request.POST)
-        formset = CatchFormSet(request.POST, request.FILES)
+        formset = CatchFormSet(request.POST, request.FILES, prefix="form")
         if trip_form.is_valid() and formset.is_valid():
             trip = trip_form.save()
             formset.instance = trip
@@ -50,7 +50,7 @@ def add_trip_view(request):
             return redirect("api:fishingtrip-list")
     else:
         trip_form = FishingTripForm()
-        formset = CatchFormSet()
+        formset = CatchFormSet(prefix="form")
 
     return render(
         request,
