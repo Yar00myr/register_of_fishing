@@ -4,32 +4,32 @@
 {% block title %}Create Fishing Trip{% endblock %}
 
 {% block content %}
-<h1>Create Fishing Trip</h1>
+    <h1>Create Fishing Trip</h1>
 
-<form method="post" enctype="multipart/form-data" id="trip-form">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <form method="post" enctype="multipart/form-data" id="trip-form">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-    <h3>Catches</h3>
-    {{ formset.management_form }}
+        <h3>Catches</h3>
+        {{ formset.management_form }}
 
-    <div id="empty-form" class="catch-form border p-2 mb-2 d-none">
-        {{ formset.empty_form.as_p }}
-        <button type="button" class="btn btn-danger remove-catch">Remove</button>
-    </div>
+        <div id="empty-form" class="catch-form border p-2 mb-2 d-none">
+            {{ formset.empty_form.as_p }}
+            <button type="button" class="btn btn-danger remove-catch">Remove</button>
+        </div>
 
-    <div id="catch-form-container">
-        {% for f in formset %}
-            <div class="catch-form border p-2 mb-2">
-                {{ f.as_p }}
-                <button type="button" class="btn btn-danger remove-catch">Remove</button>
-            </div>
-        {% endfor %}
-    </div>
+        <div id="catch-form-container">
+            {% for f in formset %}
+                <div class="catch-form border p-2 mb-2">
+                    {{ f.as_p }}
+                    <button type="button" class="btn btn-danger remove-catch">Remove</button>
+                </div>
+            {% endfor %}
+        </div>
 
-    <button type="button" class="btn btn-secondary" id="add-catch">Add Catch</button>
-    <button type="submit" class="btn btn-primary mt-2">Save</button>
-</form>
+        <button type="button" class="btn btn-secondary" id="add-catch">Add Catch</button>
+        <button type="submit" class="btn btn-primary mt-2">Save</button>
+    </form>
 {% endblock %}
 
 {% block scripts %}
