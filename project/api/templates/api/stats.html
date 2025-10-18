@@ -1,14 +1,80 @@
 <div class="row mb-4">
-    <div class="col-md-6">
-        <div class="p-3 bg-light border rounded text-center shadow-sm">
-            <h5>🎣 Total Fish Caught</h5>
-            <p class="display-6 fw-bold text-primary">{{ total_fish }}</p>
+    <div class="col-md-6 mb-3">
+        <div class="p-3 bg-light border rounded shadow-sm text-center h-100">
+            <h5 class="mb-3">🎣 Total Fish Caught</h5>
+            <p class="display-6 fw-bold text-primary mb-4">{{ total_fish }}</p>
+
+            <div class="dropdown mb-4">
+                <button class="btn btn-primary dropdown-toggle w-100" type="button" id="fishDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    🐟 Fish by Country
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="fishDropdown">
+                    {% for code, count in fish_by_country.items %}
+                        <li class="dropdown-item d-flex justify-content-between">
+                            <span>{{ code }}</span>
+                            <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="dropdown-item text-muted text-center">No fish caught yet</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <h5 class="mb-3">🎣 Total Fishing Trips</h5>
+            <p class="display-6 fw-bold text-primary mb-4">{{ total_trips_count }}</p>
+            <div class="dropdown">
+                <button class="btn btn-warning dropdown-toggle w-100" type="button" id="tripsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    🎣 Trips by Country
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="tripsDropdown">
+                    {% for code, count in trips_by_country.items %}
+                        <li class="dropdown-item d-flex justify-content-between">
+                            <span>{{ code }}</span>
+                            <span class="badge bg-warning text-dark rounded-pill">{{ count }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="dropdown-item text-muted text-center">No trips yet</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="p-3 bg-light border rounded text-center shadow-sm">
-            <h5>⚖️ Total Weight</h5>
-            <p class="display-6 fw-bold text-success">{{ total_weight|floatformat:2 }} kg</p>
+    <div class="col-md-6 mb-3">
+        <h5>Top 3 Biggest fish</h5>
+        <div id="catchCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                {% for catch in top_catches %}
+                    <button type="button" data-bs-target="#catchCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+
+            <div class="carousel-inner">
+                {% for catch in top_catches %}
+                    {% if catch.photo %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ catch.photo.url }}" class="d-block w-100" alt="{{ catch.fish_type }}">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>{{ catch.fish_type }}</h5>
+                                <p>{{ catch.weight|default:"—" }} kg</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#catchCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#catchCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
+</div>
+<div class="col-md-6 mb-3">
+    <div class="p-3 bg-light border rounded shadow-sm text-center h-100">
+        <h5 class="mb-3">⚖️ Total Weight</h5>
+        <p class="display-6 fw-bold text-success mb-0">{{ total_weight|floatformat:2 }} kg</p>
     </div>
 </div>
