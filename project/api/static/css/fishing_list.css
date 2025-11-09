@@ -1,0 +1,50 @@
+.fishing-trips {
+    padding-left: 32px;
+}
+
+.list-group {
+    padding-right: 32px;
+    padding-bottom: 75px;
+}
+
+.list-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-group li {
+    margin-bottom: 8px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.list-group-item {
+    display: block;
+    padding: 12px 20px;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    color: #0f77e6;
+    text-decoration: none;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    font-weight: 500;
+}
+
+.list-group-item:hover,
+.list-group-item-action:hover {
+    background-color: #e0f0ff;
+    border-color: #0f77e6;
+    color: #0d6efd;
+    cursor: pointer;
+}
+
+.empty-message {
+    padding: 12px 20px;
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #664d03;
+    font-style: italic;
+    text-align: center;
+    margin-top: 10px;
+    border-radius: 5px;
+}

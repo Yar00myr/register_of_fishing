@@ -1,4 +1,6 @@
 {% extends "api/_base.html" %}
+{% load static %}
+
 {% block content %}
     <h1 class="fishing-trips">Fishing Trips</h1>
     <div class="list-group">
@@ -12,8 +14,11 @@
                 </a>
                 </li>
             {% empty %}
-                <li>No trips yet.</li>
-            {% endfor %}
+                <li class="empty-message">No trips yet.</li>  {% endfor %}
         </ul>
     </div>
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/fishing_list.css' %}">
 {% endblock %}
