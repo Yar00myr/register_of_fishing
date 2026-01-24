@@ -3,11 +3,11 @@ from django.contrib.auth import views as auth_views
 
 from .views import (
     homepage_view,
-    login_page,
     logout_page,
     add_trip_view,
     trips_list_view,
     trip_detail_view,
+    delete_trip,
     new_fish_type,
 )
 
@@ -28,5 +28,6 @@ urlpatterns = [
     path("trips/add/", add_trip_view, name="fishingtrip-add"),
     path("trips/", trips_list_view, name="fishingtrip-list"),
     path("trips<int:pk>/", trip_detail_view, name="fishingtrip-detail"),
+    path("trips/<int:pk>/delete/", delete_trip, name="fishingtrip-delete"),
     path("fish/add/", new_fish_type, name="new_fish_type"),
 ]

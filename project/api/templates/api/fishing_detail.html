@@ -10,11 +10,7 @@
         <a class="btn btn-secondary" href="{% url 'api:fishingtrip-list' %}">← Back to list</a>
         <a class="btn btn-warning" href="{% url 'api:fishingtrip-detail' trip.pk %}">Edit</a>
         <a class="btn btn-secondary" href="#">Add Catch</a>
-        <form method="post" action="{% url 'api:fishingtrip-detail' trip.pk %}" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" name="_method" value="delete">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
+        <a href="{% url 'api:fishingtrip-delete' trip.pk %}" class="btn btn-danger">Delete Trip</a>
     </div>
 
     <div class="mt-4">
