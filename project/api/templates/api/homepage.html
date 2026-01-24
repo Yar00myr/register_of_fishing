@@ -21,8 +21,7 @@
         </h3>
 
         <div class="collapse" id="fishSectionCollapse">
-            <form id="fishTypeForm" method="post" enctype="multipart/form-data"
-                data-url="{% url 'api:new_fish_type' %}" class="mt-3">
+            <form method="post" action="{% url 'api:new_fish_type' %}">
                 {% csrf_token %}
                 {{ fish_type_form.as_p }}
                 <button type="submit" class="btn btn-primary">Add Fish</button>

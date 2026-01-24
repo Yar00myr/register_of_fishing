@@ -1,7 +1,7 @@
 from collections import defaultdict
 from decimal import Decimal
 
-from django.http import JsonResponse
+from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -130,14 +130,9 @@ def trip_detail_view(request, pk):
 def new_fish_type(request):
     form = FishTypeForm(request.POST)
     if form.is_valid():
-        fish = form.save()
-        return JsonResponse(
-            {
-                "success": True,
-                "name": fish.name,
-                "id": fish.id,
-                "message": f"Fish type '{fish.name}' added successfully!",
-            }
-        )
+        form.save()
+        messages.success(request, "Fish type added successfully!")
     else:
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        messages.error(request, form.errors.as_text())
+
+    return redirect("api:homepage")
