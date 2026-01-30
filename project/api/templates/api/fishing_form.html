@@ -4,35 +4,83 @@
 {% block title %}Create Fishing Trip{% endblock %}
 
 {% block content %}
-    <h1>Create Fishing Trip</h1>
+<h1>Create Fishing Trip</h1>
 
-    <form method="post" enctype="multipart/form-data" id="trip-form">
-        {% csrf_token %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <fieldset class="mb-4">
+        <legend>Trip details</legend>
         {{ form.as_p }}
+    </fieldset>
 
-        <h3>Catches</h3>
+    <fieldset>
+        <legend>Catches</legend>
+
         {{ formset.management_form }}
 
-        <div id="empty-form" class="catch-form border p-2 mb-2 d-none">
-            {{ formset.empty_form.as_p }}
-            <button type="button" class="btn btn-danger remove-catch">Remove</button>
-        </div>
-
-        <div id="catch-form-container">
+        <div id="formset-container">
             {% for f in formset %}
-                <div class="catch-form border p-2 mb-2">
+                <div class="catch-form border p-3 mb-3">
+                    {{ f.non_field_errors }}
                     {{ f.as_p }}
-                    <button type="button" class="btn btn-danger remove-catch">Remove</button>
+                    <button type="button" class="btn btn-danger remove-catch">
+                        Remove
+                    </button>
                 </div>
             {% endfor %}
         </div>
 
-        <button type="button" class="btn btn-secondary" id="add-catch">Add Catch</button>
-        <button type="submit" class="btn btn-primary mt-2">Save</button>
-    </form>
+        <button type="button" id="add-catch" class="btn btn-secondary">
+            Add catch
+        </button>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary mt-3">
+        Save
+    </button>
+</form>
+
+<div id="empty-form" style="display:none;">
+    <div class="catch-form border p-3 mb-3">
+        {{ formset.empty_form.as_p }}
+        <button type="button" class="btn btn-danger remove-catch">
+            Remove
+        </button>
+    </div>
+</div>
+
+<script>
+    const addBtn = document.getElementById("add-catch");
+    const container = document.getElementById("formset-container");
+    const emptyForm = document.getElementById("empty-form").innerHTML;
+    const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+
+    addBtn.addEventListener("click", () => {
+        const index = totalForms.value;
+        const newForm = emptyForm.replace(/__prefix__/g, index);
+
+        container.insertAdjacentHTML("beforeend", newForm);
+        totalForms.value = Number(index) + 1;
+    });
+
+    container.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-catch")) {
+            e.target.closest(".catch-form").remove();
+            const forms = container.querySelectorAll(".catch-form");
+            forms.forEach((form, index) => {
+                form.querySelectorAll("input, select, textarea").forEach((field) => {
+                    field.name = field.name.replace(/form-\d+-/, `form-${index}-`);
+                    field.id = field.id.replace(/form-\d+-/, `form-${index}-`);
+                });
+            });
+
+            totalForms.value = forms.length;
+        }
+    });
+</script>
 {% endblock %}
 
-{% block scripts %}
-    {{ block.super }}
-    <script src="{% static 'js/fish_add.js' %}?v=2"></script>
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/fishing_form.css' %}">
 {% endblock %}

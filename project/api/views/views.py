@@ -16,7 +16,8 @@ def login_page(request):
 
 
 def logout_page(request):
-    logout(request)
+    if request.method == "POST":
+        logout(request)
     return redirect("api:login")
 
 

@@ -1,0 +1,45 @@
+h1 {
+    margin-bottom: 1.5rem;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    background-color: #fafafa;
+}
+
+legend {
+    font-weight: 600;
+    padding: 0 10px;
+}
+
+.catch-form {
+    background-color: #ffffff;
+    border-radius: 6px;
+    position: relative;
+}
+
+.remove-catch {
+    margin-top: 10px;
+}
+
+#add-catch {
+    margin-top: 10px;
+}
+
+.catch-form p,
+fieldset p {
+    margin-bottom: 0.75rem;
+}
+
+input[type="file"] {
+    padding: 4px;
+}
+
+@media (max-width: 576px) {
+    fieldset {
+        padding: 1rem;
+    }
+}
