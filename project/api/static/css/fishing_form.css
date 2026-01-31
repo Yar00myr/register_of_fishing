@@ -16,22 +16,28 @@ legend {
 }
 
 .catch-form {
-    background-color: #ffffff;
-    border-radius: 6px;
-    position: relative;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
-.remove-catch {
-    margin-top: 10px;
+.catch-form p {
+    margin-bottom: 0.75rem;
+}
+
+.catch-form input[name$="-DELETE"],
+.catch-form label[for$="-DELETE"] {
+    display: none;
+}
+
+.catch-form .remove-catch {
+    margin-top: 0.5rem;
 }
 
 #add-catch {
     margin-top: 10px;
-}
-
-.catch-form p,
-fieldset p {
-    margin-bottom: 0.75rem;
 }
 
 input[type="file"] {

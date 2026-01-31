@@ -1,10 +1,14 @@
 {% extends "api/_base.html" %}
 {% load static %}
 
-{% block title %}Create Fishing Trip{% endblock %}
+{% block title %}{{ is_edit|default:False|yesno:"Edit,Create" }} Fishing Trip{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fishing_form.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Create Fishing Trip</h1>
+<h1>{{ is_edit|default:False|yesno:"Edit,Create" }} Fishing Trip</h1>
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -16,12 +20,11 @@
 
     <fieldset>
         <legend>Catches</legend>
-
         {{ formset.management_form }}
 
         <div id="formset-container">
             {% for f in formset %}
-                <div class="catch-form border p-3 mb-3">
+                <div class="catch-form" data-existing="{% if f.instance.pk %}1{% else %}0{% endif %}">
                     {{ f.non_field_errors }}
                     {{ f.as_p }}
                     <button type="button" class="btn btn-danger remove-catch">
@@ -31,18 +34,16 @@
             {% endfor %}
         </div>
 
-        <button type="button" id="add-catch" class="btn btn-secondary">
-            Add catch
+        <button type="button" id="add-catch" class="btn btn-secondary mt-2">
+            Add Catch
         </button>
     </fieldset>
 
-    <button type="submit" class="btn btn-primary mt-3">
-        Save
-    </button>
+    <button type="submit" class="btn btn-primary mt-3">Save</button>
 </form>
 
 <div id="empty-form" style="display:none;">
-    <div class="catch-form border p-3 mb-3">
+    <div class="catch-form">
         {{ formset.empty_form.as_p }}
         <button type="button" class="btn btn-danger remove-catch">
             Remove
@@ -51,36 +52,32 @@
 </div>
 
 <script>
-    const addBtn = document.getElementById("add-catch");
-    const container = document.getElementById("formset-container");
-    const emptyForm = document.getElementById("empty-form").innerHTML;
-    const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+const addBtn = document.getElementById("add-catch");
+const container = document.getElementById("formset-container");
+const emptyFormHtml = document.getElementById("empty-form").innerHTML;
+const totalForms = document.getElementById("id_form-TOTAL_FORMS");
 
-    addBtn.addEventListener("click", () => {
-        const index = totalForms.value;
-        const newForm = emptyForm.replace(/__prefix__/g, index);
+addBtn.addEventListener("click", () => {
+    const index = totalForms.value;
+    const newForm = emptyFormHtml.replace(/__prefix__/g, index);
+    container.insertAdjacentHTML("beforeend", newForm);
+    totalForms.value = Number(index) + 1;
+});
 
-        container.insertAdjacentHTML("beforeend", newForm);
-        totalForms.value = Number(index) + 1;
-    });
+container.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("remove-catch")) return;
 
-    container.addEventListener("click", (e) => {
-        if (e.target.classList.contains("remove-catch")) {
-            e.target.closest(".catch-form").remove();
-            const forms = container.querySelectorAll(".catch-form");
-            forms.forEach((form, index) => {
-                form.querySelectorAll("input, select, textarea").forEach((field) => {
-                    field.name = field.name.replace(/form-\d+-/, `form-${index}-`);
-                    field.id = field.id.replace(/form-\d+-/, `form-${index}-`);
-                });
-            });
+    const formDiv = e.target.closest(".catch-form");
+    const isExisting = formDiv.dataset.existing === "1";
 
-            totalForms.value = forms.length;
-        }
-    });
+    if (isExisting) {
+        const deleteInput = formDiv.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) deleteInput.checked = true;
+        formDiv.style.display = "none";
+    } else {
+        formDiv.remove();
+        totalForms.value = container.querySelectorAll(".catch-form").length;
+    }
+});
 </script>
-{% endblock %}
-
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/fishing_form.css' %}">
 {% endblock %}

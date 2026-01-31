@@ -9,6 +9,7 @@ from .views import (
     trip_detail_view,
     delete_trip,
     new_fish_type,
+    edit_trip,
 )
 
 
@@ -28,6 +29,7 @@ urlpatterns = [
     path("trips/add/", add_trip_view, name="fishingtrip-add"),
     path("trips/", trips_list_view, name="fishingtrip-list"),
     path("trips<int:pk>/", trip_detail_view, name="fishingtrip-detail"),
+    path("trips/<int:pk>/edit", edit_trip, name="fishingtrip-edit"),
     path("trips/<int:pk>/delete/", delete_trip, name="fishingtrip-delete"),
     path("fish/add/", new_fish_type, name="new_fish_type"),
 ]

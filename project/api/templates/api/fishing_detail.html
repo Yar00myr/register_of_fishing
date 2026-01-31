@@ -8,8 +8,7 @@
 
     <div class="mt-3">
         <a class="btn btn-secondary" href="{% url 'api:fishingtrip-list' %}">← Back to list</a>
-        <a class="btn btn-warning" href="{% url 'api:fishingtrip-detail' trip.pk %}">Edit</a>
-        <a class="btn btn-secondary" href="#">Add Catch</a>
+        <a class="btn btn-warning" href="{% url 'api:fishingtrip-edit' trip.pk %}">Edit</a>
         <a href="{% url 'api:fishingtrip-delete' trip.pk %}" class="btn btn-danger">Delete Trip</a>
     </div>
 

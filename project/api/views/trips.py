@@ -85,3 +85,31 @@ def delete_trip(request, pk: int):
     else:
 
         return render(request, "api/delete_trip.html", {"trip": trip})
+
+
+@login_required(login_url="api:login")
+def edit_trip(request, pk: int):
+    trip = get_object_or_404(FishingTrip, id=pk)
+    if request.method == "POST":
+        form = FishingTripForm(request.POST, instance=trip)
+        formset = CatchFormSet(
+            request.POST, request.FILES, instance=trip, prefix="form"
+        )
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            return redirect("api:fishingtrip-detail", pk=trip.pk)
+    else:
+        form = FishingTripForm(instance=trip)
+        formset = CatchFormSet(instance=trip, prefix="form")
+
+    return render(
+        request,
+        "api/fishing_form.html",
+        {
+            "form": form,
+            "formset": formset,
+            "trip": trip,
+            "is_edit": True,
+        },
+    )

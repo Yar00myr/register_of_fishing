@@ -31,6 +31,6 @@ CatchFormSet = inlineformset_factory(
     FishingTrip,
     Catch,
     form=CatchForm,
-    can_delete=False,
+    can_delete=True,
     extra=0,
 )
