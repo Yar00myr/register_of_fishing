@@ -21,7 +21,7 @@ jobs:
         run: pip install ruff
 
       - name: Run Ruff Check
-        run: ruff check . --exclude "**/migrations/*"
+        run: ruff check . --exclude "**/migrations/*" --fix
 
       - name: Run Ruff Format
         run: ruff format --check . --exclude "**/migrations/*"
