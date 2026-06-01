@@ -39,7 +39,7 @@ COPY --chown=appuser:appgroup . .
 
 RUN mkdir -p staticfiles media logs && chown -R appuser:appgroup staticfiles media logs
 
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY=dummy-key-for-building-static python manage.py collectstatic --noinput
 
 USER appuser
 
