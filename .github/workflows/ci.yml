@@ -40,7 +40,6 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./project
+          context: .
           file: ./project/Dockerfile
           push: false
-          options: --progress=plain
