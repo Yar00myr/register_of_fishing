@@ -43,3 +43,4 @@ jobs:
           context: ./project
           file: ./project/Dockerfile
           push: false
+          options: --progress=plain
