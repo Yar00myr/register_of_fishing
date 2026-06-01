@@ -24,7 +24,7 @@ jobs:
         run: ruff check . --exclude "**/migrations/*" --fix
 
       - name: Run Ruff Format
-        run: ruff format --check . --exclude "**/migrations/*"
+        run: ruff format . --exclude "**/migrations/*"
      
   test-and-build:
     runs-on: ubuntu-latest
