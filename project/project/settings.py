@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "api",
+    "main",
 ]
 
 MIDDLEWARE = [
@@ -145,6 +145,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-LOGIN_REDIRECT_URL = "api:homepage"
-LOGOUT_REDIRECT_URL = "api:login"
-LOGIN_URL = "api:login"
+LOGIN_REDIRECT_URL = "main:homepage"
+LOGOUT_REDIRECT_URL = "main:login"
+LOGIN_URL = "main:login"
