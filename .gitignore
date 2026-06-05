@@ -43,5 +43,4 @@ env.bak/
 venv.bak/
 
 
-project/project/settings.py
 media/
