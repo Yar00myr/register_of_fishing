@@ -4,6 +4,8 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.http import require_POST
+
 
 from ..forms import FishingTripForm, CatchFormSet, CatchPhotoFormSet
 from ..models import FishingTrip, Catch
@@ -69,13 +71,12 @@ def trip_detail_view(request, pk: int):
 
 
 @login_required(login_url="main:login")
+@require_POST
 def delete_trip(request, pk: int):
     trip = get_object_or_404(FishingTrip, pk=pk)
-    if request.method == "POST":
-        trip.delete()
-        messages.success(request, f'Trip "{trip}" deleted.')
-        return redirect("main:fishingtrip-list")
-    return render(request, "main/delete_trip.html", {"trip": trip})
+    trip.delete()
+    messages.success(request, f'Trip "{trip}" deleted.')
+    return redirect("main:fishingtrip-list")
 
 
 @login_required(login_url="main:login")

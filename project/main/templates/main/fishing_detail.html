@@ -4,20 +4,17 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/fishing_detail.css' %}">
 {% endblock %}
-
 {% block content %}
-
 <h1 class="mb-1">Fishing Trip</h1>
 <div class="trip-meta">
   <span>📅 {{ trip.date }}</span>
   <span>📍 {{ trip.country_name }}</span>
   {% if trip.name %}<span>🏷 {{ trip.name }}</span>{% endif %}
 </div>
-
 <div class="trip-actions">
   <a class="trip-btn" href="{% url 'main:fishingtrip-list' %}">← Back to list</a>
   <a class="trip-btn trip-btn-edit" href="{% url 'main:fishingtrip-edit' trip.pk %}">Edit</a>
-  <a class="trip-btn trip-btn-delete" href="{% url 'main:fishingtrip-delete' trip.pk %}">Delete trip</a>
+  <button type="button" class="trip-btn trip-btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete trip</button>
 </div>
 
 <div class="detail-section">
@@ -81,4 +78,24 @@
   {% endfor %}
 </div>
 
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border);">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" style="color: var(--text-primary);">Delete Fishing Trip</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="color: var(--text-secondary);">
+        Are you sure you want to delete the trip to <strong>{{ trip.country_name }}</strong> on <strong>{{ trip.date }}</strong>?
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form method="post" action="{% url 'main:fishingtrip-delete' trip.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
