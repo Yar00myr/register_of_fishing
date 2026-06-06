@@ -1,4 +1,4 @@
-{% extends 'api/_base.html' %}
+{% extends 'main/_base.html' %}
 
 {% block content %}
 <div class="container mt-5">
@@ -8,7 +8,7 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Yes, Delete</button>
-        <a href="{% url 'api:fishingtrip-detail' trip.pk %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'main:fishingtrip-detail' trip.pk %}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 {% endblock %}

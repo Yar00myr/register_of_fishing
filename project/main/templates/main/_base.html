@@ -30,18 +30,18 @@
                             <span class="d-none d-sm-inline ms-1">Menu</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
-                            <li><a class="dropdown-item" href="{% url 'api:homepage' %}">
+                            <li><a class="dropdown-item" href="{% url 'main:homepage' %}">
                                 <i class="bi bi-house me-2"></i>Home
                             </a></li>
-                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-list' %}">
+                            <li><a class="dropdown-item" href="{% url 'main:fishingtrip-list' %}">
                                 <i class="bi bi-list-ul me-2"></i>All Trips
                             </a></li>
-                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-add' %}">
+                            <li><a class="dropdown-item" href="{% url 'main:fishingtrip-add' %}">
                                 <i class="bi bi-plus-circle me-2"></i>Add Trip
                             </a></li>
                         </ul>
                     </div>
-                    <form method="post" action="{% url 'api:logout' %}" class="d-inline m-0 p-0">
+                    <form method="post" action="{% url 'main:logout' %}" class="d-inline m-0 p-0">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-nav-danger" title="Logout">
                             <i class="bi bi-box-arrow-right"></i>

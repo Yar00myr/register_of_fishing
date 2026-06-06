@@ -1,9 +1,9 @@
-{% extends "api/_base.html" %}
+{% extends "main/_base.html" %}
 {% load static %}
  
 {% block content %}
     {% block stats %}
-        {% include "api/stats.html" %}
+        {% include "main/stats.html" %}
     {% endblock %}
 {% endblock %}
  
@@ -21,7 +21,7 @@
         </button>
  
         <div class="collapse fish-collapse-body" id="fishSectionCollapse">
-            <form method="post" action="{% url 'api:new_fish_type' %}">
+            <form method="post" action="{% url 'main:new_fish_type' %}">
                 {% csrf_token %}
                 {{ fish_type_form.as_p }}
                 <button type="submit" class="btn-add-fish mt-1">

@@ -1,4 +1,4 @@
-{% extends "api/_base.html" %}
+{% extends "main/_base.html" %}
 {% load static %}
  
 {% block content %}
@@ -6,7 +6,7 @@
     <ul class="trip-list">
         {% for trip in trips %}
             <li>
-                <a href="{% url 'api:fishingtrip-detail' trip.pk %}" class="list-group-item">
+                <a href="{% url 'main:fishingtrip-detail' trip.pk %}" class="list-group-item">
                     <i class="bi bi-calendar3 me-2" style="opacity:.6"></i>
                     {{ trip.date }}
                     <span style="margin:0 .5rem;opacity:.35">·</span>
