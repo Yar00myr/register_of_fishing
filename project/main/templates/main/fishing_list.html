@@ -1,8 +1,36 @@
 {% extends "main/_base.html" %}
 {% load static %}
- 
 {% block content %}
     <h1 class="fishing-trips">Fishing Trips</h1>
+
+    <div class="sort-bar mb-3">
+        <span style="opacity:.6; font-size:.9rem;">Sort by:</span>
+
+        {% if current_sort == "-date" %}
+            <a href="?sort=date" class="btn btn-sm btn-primary ms-2">Date ↓</a>
+        {% else %}
+            <a href="?sort=-date" class="btn btn-sm btn-outline-primary ms-2">Date ↓</a>
+        {% endif %}
+
+        {% if current_sort == "date" %}
+            <a href="?sort=-date" class="btn btn-sm btn-primary ms-1">Date ↑</a>
+        {% else %}
+            <a href="?sort=date" class="btn btn-sm btn-outline-primary ms-1">Date ↑</a>
+        {% endif %}
+
+        {% if current_sort == "country" %}
+            <a href="?sort=-country" class="btn btn-sm btn-primary ms-2">Country A→Z</a>
+        {% else %}
+            <a href="?sort=country" class="btn btn-sm btn-outline-primary ms-2">Country A→Z</a>
+        {% endif %}
+
+        {% if current_sort == "-country" %}
+            <a href="?sort=country" class="btn btn-sm btn-primary ms-1">Country Z→A</a>
+        {% else %}
+            <a href="?sort=-country" class="btn btn-sm btn-outline-primary ms-1">Country Z→A</a>
+        {% endif %}
+    </div>
+
     <ul class="trip-list">
         {% for trip in trips %}
             <li>
@@ -12,6 +40,11 @@
                     <span style="margin:0 .5rem;opacity:.35">·</span>
                     <i class="bi bi-geo-alt me-1" style="opacity:.6"></i>
                     {{ trip.country_code }}
+                    {% if trip.name %}
+                        <span style="margin:0 .5rem;opacity:.35">·</span>
+                        <i class="bi bi-tag me-1" style="opacity:.6"></i>
+                        {{ trip.name }}
+                    {% endif %}
                 </a>
             </li>
         {% empty %}
@@ -19,4 +52,3 @@
         {% endfor %}
     </ul>
 {% endblock %}
- 

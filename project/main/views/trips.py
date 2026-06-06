@@ -36,8 +36,20 @@ def add_trip_view(request):
 
 @login_required(login_url="main:login")
 def trips_list_view(request):
-    trips = FishingTrip.objects.prefetch_related("catches").order_by("-date")
-    return render(request, "main/fishing_list.html", {"trips": trips})
+    sort = request.GET.get("sort", "-date")
+
+    allowed_sorts = {
+        "-date": "-date",
+        "date": "date",
+        "country": "country_code",
+        "-country": "-country_code",
+    }
+    order_by = allowed_sorts.get(sort, "-date")
+
+    trips = FishingTrip.objects.prefetch_related("catches").order_by(order_by)
+    return render(
+        request, "main/fishing_list.html", {"trips": trips, "current_sort": sort}
+    )
 
 
 @login_required(login_url="main:login")
