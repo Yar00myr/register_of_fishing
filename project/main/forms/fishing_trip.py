@@ -1,5 +1,4 @@
-from datetime import date
-
+from datetime import date as date_type
 from django import forms
 
 from ..models import FishingTrip
@@ -11,16 +10,16 @@ class FishingTripForm(forms.ModelForm):
         required=True,
         widget=forms.DateInput(
             format="%Y-%m-%d",
-            attrs={"type": "date", "max": date.today().isoformat()},
+            attrs={"type": "date", "max": date_type.today().isoformat()},
         ),
     )
 
     def clean_date(self):
-        date = self.cleaned_data["date"]
-        if date > date.today():
+        value = self.cleaned_data["date"]
+        if value > date_type.today():
             raise forms.ValidationError("The date cannot be in the future.")
-        return date
+        return value
 
     class Meta:
         model = FishingTrip
-        fields = ["country_code", "date"]
+        fields = ["name", "country_code", "date"]

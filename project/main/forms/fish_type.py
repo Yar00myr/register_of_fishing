@@ -10,22 +10,17 @@ fish_name_validator = RegexValidator(
 
 
 class FishTypeForm(forms.ModelForm):
-
     name = forms.CharField(
         required=True,
         label="Fish Type Name",
         validators=[fish_name_validator],
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Enter fish type"}
-        ),
+        widget=forms.TextInput(attrs={"placeholder": "Enter fish type"}),
     )
 
     def clean_name(self):
         name = self.cleaned_data.get("name", "").strip()
-
-        if not name.replace("-", "").replace(" ", ""):
-            raise forms.ValidationError("Invalid fish name.")
-
+        if not any(c.isalpha() for c in name):
+            raise forms.ValidationError("Fish name must contain at least one letter.")
         return name
 
     class Meta:

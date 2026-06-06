@@ -1,30 +1,21 @@
+from decimal import Decimal
 from django import forms
 from django.forms import inlineformset_factory
-from ..models import FishingTrip, Catch
+
+from ..models import FishingTrip, Catch, CatchPhoto
 
 
 class CatchForm(forms.ModelForm):
     weight = forms.DecimalField(
-        min_value=0,
+        min_value=Decimal("0.01"),
         decimal_places=2,
         required=False,
-        help_text="weight in kg",
-        widget=forms.NumberInput(),
+        help_text="Weight of this fish in kg",
     )
-
-    def clean_weight(self):
-        weight = self.cleaned_data["weight"]
-        if weight is None:
-            return None
-
-        if weight <= 0:
-            raise forms.ValidationError("The weight must be greater than 0 kg.")
-        else:
-            return weight
 
     class Meta:
         model = Catch
-        fields = ["fish_type", "weight", "photo"]
+        fields = ["fish_type", "weight"]
 
 
 CatchFormSet = inlineformset_factory(
@@ -33,4 +24,17 @@ CatchFormSet = inlineformset_factory(
     form=CatchForm,
     can_delete=True,
     extra=0,
+    max_num=100,
+    validate_max=True,
+)
+
+
+CatchPhotoFormSet = inlineformset_factory(
+    Catch,
+    CatchPhoto,
+    fields=["photo", "caption"],
+    can_delete=True,
+    extra=1,
+    max_num=10,
+    validate_max=True,
 )

@@ -1,46 +1,49 @@
-from collections import defaultdict
-from decimal import Decimal
-
 from django.contrib import messages
-from django.views.decorators.http import require_POST
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Sum
+from django.views.decorators.http import require_POST
 from django.shortcuts import redirect, render, get_object_or_404
 
-from ..forms import FishingTripForm, CatchFormSet, FishTypeForm
+from ..forms import FishTypeForm, CatchPhotoFormSet
 from ..models import FishingTrip, FishType, Catch
 
 
 def login_page(request):
+    if request.user.is_authenticated:
+        return redirect("api:homepage")
     return render(request, "api/login.html")
 
 
+@require_POST
 def logout_page(request):
-    if request.method == "POST":
-        logout(request)
+    logout(request)
     return redirect("api:login")
 
 
 @login_required(login_url="api:login")
 def homepage_view(request):
-    fish_types = FishType.objects.all()
-    fishing_trips = FishingTrip.objects.all()
+    fish_types = FishType.objects.order_by("name")
     fish_type_form = FishTypeForm()
     stats = FishingTrip.total_stats()
-    total_trips_count = FishingTrip.objects.count()
 
-    trips_by_country = {}
-    for trip in fishing_trips:
-        country = trip.country_code
-        trips_by_country[country] = trips_by_country.get(country, 0) + 1
+    trips_by_country = dict(
+        FishingTrip.objects.values("country_code")
+        .annotate(count=Count("id"))
+        .values_list("country_code", "count")
+    )
+    fish_by_country = dict(
+        FishingTrip.objects.values("country_code")
+        .annotate(total=Count("catches"))
+        .values_list("country_code", "total")
+    )
 
-    fish_by_country = {}
-    for trip in fishing_trips:
-        country = trip.country_code
-        total_catch = sum(getattr(catch, "quantity", 1) for catch in trip.catches.all())
-        fish_by_country[country] = fish_by_country.get(country, 0) + total_catch
-
-    top_catches = Catch.objects.filter(photo__isnull=False).order_by("-weight")[:3]
+    top_catches = (
+        Catch.objects.filter(photos__isnull=False)
+        .prefetch_related("photos")
+        .order_by("-weight")
+        .distinct()[:3]
+    )
 
     context = {
         "fish_types": fish_types,
@@ -49,14 +52,10 @@ def homepage_view(request):
         "total_weight": stats["total_weight"],
         "trips_by_country": trips_by_country,
         "fish_by_country": fish_by_country,
-        "total_trips_count": total_trips_count,
+        "total_trips_count": FishingTrip.objects.count(),
         "top_catches": top_catches,
     }
-    return render(
-        request,
-        "api/homepage.html",
-        context=context,
-    )
+    return render(request, "api/homepage.html", context=context)
 
 
 @login_required(login_url="api:login")
@@ -67,6 +66,27 @@ def new_fish_type(request):
         form.save()
         messages.success(request, "Fish type added successfully!")
     else:
-        messages.error(request, form.errors.as_text())
-
+        messages.error(request, "Failed to add fish type. Please check the form.")
     return redirect("api:homepage")
+
+
+# @login_required(login_url="api:login")
+# def catch_detail_view(request, pk: int):
+#     catch = get_object_or_404(Catch.objects.prefetch_related("photos"), pk=pk)
+#     if request.method == "POST":
+#         formset = CatchPhotoFormSet(request.POST, request.FILES, instance=catch)
+#         if formset.is_valid():
+#             formset.save()
+#             messages.success(request, "Photos saved!")
+#             return redirect("api:catch-detail", pk=catch.pk)
+#     else:
+#         formset = CatchPhotoFormSet(instance=catch)
+
+#     return render(
+#         request,
+#         "api/catch_detail.html",
+#         {
+#             "catch": catch,
+#             "formset": formset,
+#         },
+#     )

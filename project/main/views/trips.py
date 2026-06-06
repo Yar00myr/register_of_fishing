@@ -1,7 +1,7 @@
 from collections import defaultdict
 from decimal import Decimal
 
-
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
@@ -12,22 +12,23 @@ from ..models import FishingTrip
 @login_required(login_url="api:login")
 def add_trip_view(request):
     if request.method == "POST":
-        trip_form = FishingTripForm(request.POST)
+        form = FishingTripForm(request.POST)
         formset = CatchFormSet(request.POST, request.FILES, prefix="form")
-        if trip_form.is_valid() and formset.is_valid():
-            trip = trip_form.save()
+        if form.is_valid() and formset.is_valid():
+            trip = form.save()
             formset.instance = trip
             formset.save()
+            messages.success(request, "Trip added successfully!")
             return redirect("api:fishingtrip-list")
     else:
-        trip_form = FishingTripForm()
+        form = FishingTripForm()
         formset = CatchFormSet(prefix="form")
 
     return render(
         request,
         "api/fishing_form.html",
         {
-            "form": trip_form,
+            "form": form,
             "formset": formset,
         },
     )
@@ -35,69 +36,51 @@ def add_trip_view(request):
 
 @login_required(login_url="api:login")
 def trips_list_view(request):
-    trips = FishingTrip.objects.all().prefetch_related("catches").order_by("date")
+    trips = FishingTrip.objects.prefetch_related("catches").order_by("-date")
     return render(request, "api/fishing_list.html", {"trips": trips})
 
 
 @login_required(login_url="api:login")
 def trip_detail_view(request, pk: int):
-    trip = get_object_or_404(FishingTrip.objects.prefetch_related("catches"), pk=pk)
-
-    grouped = defaultdict(
-        lambda: {
-            "total_amount": 0,
-            "total_weight": Decimal("0"),
-            "weights": list(),
-        }
+    trip = get_object_or_404(
+        FishingTrip.objects.prefetch_related("catches__fish_type"),
+        pk=pk,
     )
-
-    for catch in trip.catches.all():
-        name = catch.fish_type.name
-        grouped[name]["total_amount"] += catch.amount
-        grouped[name]["total_weight"] += catch.total_weight
-        if catch.weight:
-            grouped[name]["weights"].append(catch.weight)
-
-    grouped_catches = []
-    for name, data in grouped.items():
-        grouped_catches.append(
-            {
-                "fish_type": name,
-                "amount": data["total_amount"],
-                "weights": sorted(data["weights"]),
-                "total_weight": data["total_weight"],
-            }
-        )
-
     return render(
         request,
         "api/fishing_detail.html",
-        {"trip": trip, "grouped_catches": grouped_catches},
+        {
+            "trip": trip,
+            "grouped_catches": trip.grouped_catches(),
+        },
     )
 
 
 @login_required(login_url="api:login")
 def delete_trip(request, pk: int):
-    trip = get_object_or_404(FishingTrip, id=pk)
+    trip = get_object_or_404(FishingTrip, pk=pk)
     if request.method == "POST":
         trip.delete()
+        messages.success(request, f'Trip "{trip}" deleted.')
         return redirect("api:fishingtrip-list")
-    else:
-
-        return render(request, "api/delete_trip.html", {"trip": trip})
+    return render(request, "api/delete_trip.html", {"trip": trip})
 
 
 @login_required(login_url="api:login")
 def edit_trip(request, pk: int):
-    trip = get_object_or_404(FishingTrip, id=pk)
+    trip = get_object_or_404(FishingTrip, pk=pk)
     if request.method == "POST":
         form = FishingTripForm(request.POST, instance=trip)
         formset = CatchFormSet(
-            request.POST, request.FILES, instance=trip, prefix="form"
+            request.POST,
+            request.FILES,
+            instance=trip,
+            prefix="form",
         )
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
+            messages.success(request, "Trip updated successfully!")
             return redirect("api:fishingtrip-detail", pk=trip.pk)
     else:
         form = FishingTripForm(instance=trip)
