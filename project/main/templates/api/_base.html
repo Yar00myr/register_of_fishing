@@ -1,54 +1,89 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Fishing Register{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <header class="p-3 bg-light border-bottom">
-        <div class="container d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">Fishing Register</h2>
-
-            {% if request.user.is_authenticated and request.resolver_match.url_name != 'login' %}
-                <div class="d-flex align-items-center gap-2">
+    <header>
+        <div class="header-inner">
+            <h2 class="header-title">🎣 Fishing Register</h2>
+            <div class="d-flex align-items-center gap-2">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="bi bi-moon-fill" id="themeIcon"></i>
+                </button>
+ 
+                {% if request.user.is_authenticated and request.resolver_match.url_name != 'login' %}
                     <div class="dropdown">
-                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            Menu
+                        <button class="btn btn-nav dropdown-toggle" type="button"
+                                id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-list"></i>
+                            <span class="d-none d-sm-inline ms-1">Menu</span>
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="menuDropdown">
-                            <li><a class="dropdown-item" href="{% url 'api:homepage' %}">Home</a></li>
-                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-list' %}">All Trips</a></li>
-                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-add' %}">Add Trip</a></li>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
+                            <li><a class="dropdown-item" href="{% url 'api:homepage' %}">
+                                <i class="bi bi-house me-2"></i>Home
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-list' %}">
+                                <i class="bi bi-list-ul me-2"></i>All Trips
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'api:fishingtrip-add' %}">
+                                <i class="bi bi-plus-circle me-2"></i>Add Trip
+                            </a></li>
                         </ul>
                     </div>
                     <form method="post" action="{% url 'api:logout' %}" class="d-inline m-0 p-0">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger">
-                            Logout
+                        <button type="submit" class="btn btn-nav-danger" title="Logout">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span class="d-none d-sm-inline ms-1">Logout</span>
                         </button>
                     </form>
-
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </header>
-
+ 
     <main>
         {% block content %}{% endblock %}
     </main>
-    
+ 
     {% block footer %}{% endblock %}
-    
-
+ 
     {% block scripts %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            const html = document.documentElement;
+            const btn  = document.getElementById('themeToggle');
+            const icon = document.getElementById('themeIcon');
+            const KEY  = 'fishing-theme';
+ 
+            function applyTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+                btn.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            }
+ 
+            const stored = localStorage.getItem(KEY);
+            const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(stored || (sysDark ? 'dark' : 'light'));
+ 
+            btn.addEventListener('click', () => {
+                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                applyTheme(next);
+                localStorage.setItem(KEY, next);
+            });
+        </script>
     {% endblock %}
 </body>
 </html>
+

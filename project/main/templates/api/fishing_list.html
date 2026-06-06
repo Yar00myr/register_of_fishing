@@ -1,24 +1,22 @@
 {% extends "api/_base.html" %}
 {% load static %}
-
+ 
 {% block content %}
     <h1 class="fishing-trips">Fishing Trips</h1>
-    <div class="list-group">
-        <ul>
-            {% for trip in trips %}
-                <li>
-                <a 
-                href="{% url 'api:fishingtrip-detail' trip.pk %}"
-                class="list-group-item list-group-item-action">
-                    {{ trip.date }} — {{ trip.country_code }}
+    <ul class="trip-list">
+        {% for trip in trips %}
+            <li>
+                <a href="{% url 'api:fishingtrip-detail' trip.pk %}" class="list-group-item">
+                    <i class="bi bi-calendar3 me-2" style="opacity:.6"></i>
+                    {{ trip.date }}
+                    <span style="margin:0 .5rem;opacity:.35">·</span>
+                    <i class="bi bi-geo-alt me-1" style="opacity:.6"></i>
+                    {{ trip.country_code }}
                 </a>
-                </li>
-            {% empty %}
-                <li class="empty-message">No trips yet.</li>  {% endfor %}
-        </ul>
-    </div>
+            </li>
+        {% empty %}
+            <li class="empty-message">No trips yet.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
-
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/fishing_list.css' %}">
-{% endblock %}
+ 
