@@ -9,5 +9,6 @@ from .trips import (
     trips_list_view as trips_list_view, 
     trip_detail_view as trip_detail_view, 
     delete_trip as delete_trip, 
-    edit_trip as edit_trip
+    edit_trip as edit_trip,
+    catch_photos_view as catch_photos_view
 )

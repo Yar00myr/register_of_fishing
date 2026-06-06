@@ -1,0 +1,87 @@
+{% extends "main/_base.html" %}
+{% load static %}
+{% block title %}Photos — {{ catch }}{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">Photos for {{ catch }}</h1>
+<p class="text-muted">{{ catch.fishing_trip }}</p>
+
+<a href="{% url 'main:fishingtrip-detail' catch.fishing_trip.pk %}" class="btn btn-secondary mb-4">
+  ← Back to trip
+</a>
+
+{% if catch.photos.all %}
+  <div class="row g-2 mb-4">
+    {% for photo in catch.photos.all %}
+      <div class="col-6 col-md-3">
+        <img src="{{ photo.photo.url }}"
+             class="img-fluid rounded"
+             style="aspect-ratio:4/3;object-fit:cover;width:100%;"
+             alt="{{ catch.fish_type }}">
+        {% if photo.caption %}<p class="text-muted mt-1" style="font-size:.8rem;">{{ photo.caption }}</p>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="fc-card">
+  <div class="fc-card-title">Add photos</div>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <div id="photo-container">
+      {% for f in formset %}
+        <div class="photo-form mb-3">
+          {{ f.id }}
+          <div class="mb-2">
+            <label class="form-label">Photo</label>
+            {{ f.photo }}
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Caption (optional)</label>
+            {{ f.caption }}
+          </div>
+          {{ f.DELETE }}
+        </div>
+      {% endfor %}
+    </div>
+    <button type="button" id="add-photo" class="btn btn-outline-secondary btn-sm mb-3">
+      + Add another photo
+    </button>
+    <div>
+      <button type="submit" class="btn btn-primary">Save photos</button>
+    </div>
+  </form>
+</div>
+
+<div id="empty-photo-form" style="display:none;">
+  <div class="photo-form mb-3">
+    {{ formset.empty_form.id }}
+    <div class="mb-2">
+      <label class="form-label">Photo</label>
+      {{ formset.empty_form.photo }}
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Caption (optional)</label>
+      {{ formset.empty_form.caption }}
+    </div>
+    {{ formset.empty_form.DELETE }}
+  </div>
+</div>
+
+<script>
+const addBtn = document.getElementById("add-photo");
+const container = document.getElementById("photo-container");
+const emptyHtml = document.getElementById("empty-photo-form").innerHTML;
+const totalForms = document.getElementById("id_catchphoto_set-TOTAL_FORMS");
+
+addBtn.addEventListener("click", () => {
+  const index = totalForms.value;
+  const newForm = emptyHtml.replace(/__prefix__/g, index);
+  container.insertAdjacentHTML("beforeend", newForm);
+  totalForms.value = Number(index) + 1;
+});
+</script>
+
+{% endblock %}

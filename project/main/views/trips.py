@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
-from ..forms import FishingTripForm, CatchFormSet
-from ..models import FishingTrip
+from ..forms import FishingTripForm, CatchFormSet, CatchPhotoFormSet
+from ..models import FishingTrip, Catch
 
 
 @login_required(login_url="main:login")
@@ -43,7 +43,7 @@ def trips_list_view(request):
 @login_required(login_url="main:login")
 def trip_detail_view(request, pk: int):
     trip = get_object_or_404(
-        FishingTrip.objects.prefetch_related("catches__fish_type"),
+        FishingTrip.objects.prefetch_related("catches__fish_type", "catches__photos"),
         pk=pk,
     )
     return render(
@@ -94,5 +94,27 @@ def edit_trip(request, pk: int):
             "formset": formset,
             "trip": trip,
             "is_edit": True,
+        },
+    )
+
+
+@login_required(login_url="main:login")
+def catch_photos_view(request, pk: int):
+    catch = get_object_or_404(Catch.objects.prefetch_related("photos"), pk=pk)
+    if request.method == "POST":
+        formset = CatchPhotoFormSet(request.POST, request.FILES, instance=catch)
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, "Photos saved!")
+            return redirect("main:fishingtrip-detail", pk=catch.fishing_trip_id)
+    else:
+        formset = CatchPhotoFormSet(instance=catch)
+
+    return render(
+        request,
+        "main/catch_photos.html",
+        {
+            "catch": catch,
+            "formset": formset,
         },
     )

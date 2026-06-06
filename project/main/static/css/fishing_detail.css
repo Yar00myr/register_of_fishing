@@ -1,0 +1,140 @@
+.trip-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
+  font-size: .875rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.trip-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.detail-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.25rem;
+  margin-top: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.detail-section-label {
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.detail-section .table {
+  font-size: .875rem;
+  margin-bottom: 0;
+}
+
+.detail-section .table th {
+  font-weight: 500;
+  color: var(--text-muted);
+  border-top: none;
+  font-size: .8rem;
+}
+
+.detail-section .table tfoot th,
+.detail-section .table tfoot td {
+  border-top: 1px solid var(--border);
+  font-weight: 500;
+}
+
+.catch-block + .catch-block {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.catch-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .75rem;
+}
+
+.catch-block-name {
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-secondary);
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.photo-grid img {
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  width: 100%;
+  border-radius: var(--r-sm);
+  display: block;
+}
+
+.no-photos-text {
+  font-size: .8rem;
+  color: var(--text-muted);
+}
+
+.trip-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 576px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.trip-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: .8rem;
+  font-weight: 500;
+  padding: .4rem .9rem;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.trip-btn:hover {
+  background: var(--bg);
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.trip-btn-edit {
+  border-color: var(--accent-warm);
+  color: var(--accent-warm);
+}
+.trip-btn-edit:hover {
+  background: rgba(255, 193, 7, .08);
+  color: var(--accent-warm-h);
+}
+
+.trip-btn-delete {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+.trip-btn-delete:hover {
+  background: rgba(220, 53, 69, .08);
+  color: #c82333;
+}

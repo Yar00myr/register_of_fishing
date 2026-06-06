@@ -76,25 +76,3 @@ def new_fish_type(request):
     else:
         messages.error(request, "Failed to add fish type. Please check the form.")
     return redirect("main:homepage")
-
-
-# @login_required(login_url="api:login")
-# def catch_detail_view(request, pk: int):
-#     catch = get_object_or_404(Catch.objects.prefetch_related("photos"), pk=pk)
-#     if request.method == "POST":
-#         formset = CatchPhotoFormSet(request.POST, request.FILES, instance=catch)
-#         if formset.is_valid():
-#             formset.save()
-#             messages.success(request, "Photos saved!")
-#             return redirect("api:catch-detail", pk=catch.pk)
-#     else:
-#         formset = CatchPhotoFormSet(instance=catch)
-
-#     return render(
-#         request,
-#         "api/catch_detail.html",
-#         {
-#             "catch": catch,
-#             "formset": formset,
-#         },
-#     )

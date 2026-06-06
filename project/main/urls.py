@@ -11,6 +11,7 @@ from .views import (
     delete_trip,
     new_fish_type,
     edit_trip,
+    catch_photos_view,
 )
 
 app_name = "main"
@@ -20,6 +21,7 @@ urlpatterns = [
     path("", homepage_view, name="homepage"),
     path("login/", login_page, name="login"),
     path("logout/", logout_page, name="logout"),
+    path("catches/<int:pk>/photos/", catch_photos_view, name="catch-photos"),
     path("trips/add/", add_trip_view, name="fishingtrip-add"),
     path("trips/", trips_list_view, name="fishingtrip-list"),
     path("trips<int:pk>/", trip_detail_view, name="fishingtrip-detail"),
