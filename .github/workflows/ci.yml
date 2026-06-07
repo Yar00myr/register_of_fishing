@@ -25,11 +25,37 @@ jobs:
 
       - name: Run Ruff Format
         run: ruff format . --exclude "**/migrations/*"
-     
-  test-and-build:
+
+  test:
     runs-on: ubuntu-latest
-    needs: lint 
-    
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          cd project
+          pip install -r requirements.txt
+          pip install pytest pytest-django
+
+      - name: Run tests
+        run: |
+          cd project
+          pytest --tb=short -v
+        env:
+          DJANGO_SETTINGS_MODULE: project.settings
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: "True"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
