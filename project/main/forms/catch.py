@@ -1,7 +1,7 @@
-from decimal import Decimal
 from django import forms
 from django.forms import inlineformset_factory
-
+from django.forms.widgets import ClearableFileInput
+from decimal import Decimal
 from ..models import FishingTrip, Catch, CatchPhoto
 
 
@@ -18,6 +18,22 @@ class CatchForm(forms.ModelForm):
         fields = ["fish_type", "weight"]
 
 
+class CatchPhotoForm(forms.ModelForm):
+    class Meta:
+        model = CatchPhoto
+        fields = ["photo", "caption"]
+        widgets = {
+            "photo": ClearableFileInput(
+                attrs={"class": "form-control form-control-sm"}
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["photo"].widget.show_hidden_initial = False
+        self.fields["photo"].widget.template_name = "django/forms/widgets/file.html"
+
+
 CatchFormSet = inlineformset_factory(
     FishingTrip,
     Catch,
@@ -28,11 +44,10 @@ CatchFormSet = inlineformset_factory(
     validate_max=True,
 )
 
-
 CatchPhotoFormSet = inlineformset_factory(
     Catch,
     CatchPhoto,
-    fields=["photo", "caption"],
+    form=CatchPhotoForm,
     can_delete=True,
     extra=1,
     max_num=10,
