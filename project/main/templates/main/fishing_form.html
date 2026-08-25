@@ -1,0 +1,114 @@
+{% extends "main/_base.html" %}
+{% load static %}
+{% block title %}{{ is_edit|default:False|yesno:"Edit,Create" }} Fishing Trip{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fishing_form.css' %}">
+{% endblock %}
+{% block content %}
+
+<h1 class="page-title">{{ is_edit|default:False|yesno:"Edit,Create" }} Fishing Trip</h1>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div class="fc-card mb-3">
+    <div class="fc-card-title">Trip details</div>
+
+    <div class="mb-3">
+      <label class="form-label">{{ form.name.label }}</label>
+      {{ form.name }}
+      {% if form.name.errors %}<div class="invalid-feedback d-block">{{ form.name.errors }}</div>{% endif %}
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{ form.country_code.label }}</label>
+      {{ form.country_code }}
+      {% if form.country_code.errors %}<div class="invalid-feedback d-block">{{ form.country_code.errors }}</div>{% endif %}
+    </div>
+
+    <div class="mb-0">
+      <label class="form-label">{{ form.date.label }}</label>
+      {{ form.date }}
+      {% if form.date.errors %}<div class="invalid-feedback d-block">{{ form.date.errors }}</div>{% endif %}
+    </div>
+  </div>
+
+  <div class="fc-card mb-3">
+    <div class="fc-card-title">Catches</div>
+    {{ formset.management_form }}
+
+    <div id="formset-container">
+      {% for f in formset %}
+        <div class="catch-row" data-existing="{% if f.instance.pk %}1{% else %}0{% endif %}">
+          {{ f.id }}
+          <div class="catch-row-fields">
+            <div class="catch-field">
+              <label class="form-label">{{ f.fish_type.label }}</label>
+              {{ f.fish_type }}
+            </div>
+            <div class="catch-field">
+              <label class="form-label">{{ f.weight.label }}</label>
+              {{ f.weight }}
+            </div>
+          </div>
+          <button type="button" class="remove-catch" aria-label="Remove">✕</button>
+          {{ f.DELETE }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="button" id="add-catch">+ Add catch</button>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary px-4">Save trip</button>
+    <a href="{% url 'main:fishingtrip-list' %}" class="btn btn-outline-secondary">Cancel</a>
+  </div>
+</form>
+
+<div id="empty-form" style="display:none;">
+  <div class="catch-row">
+    {{ formset.empty_form.id }}
+    <div class="catch-row-fields">
+      <div class="catch-field">
+        <label class="form-label">{{ formset.empty_form.fish_type.label }}</label>
+        {{ formset.empty_form.fish_type }}
+      </div>
+      <div class="catch-field">
+        <label class="form-label">{{ formset.empty_form.weight.label }}</label>
+        {{ formset.empty_form.weight }}
+      </div>
+    </div>
+    <button type="button" class="remove-catch" aria-label="Remove">✕</button>
+    {{ formset.empty_form.DELETE }}
+  </div>
+</div>
+
+<script>
+const addBtn = document.getElementById("add-catch");
+const container = document.getElementById("formset-container");
+const emptyFormHtml = document.getElementById("empty-form").innerHTML;
+const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+
+addBtn.addEventListener("click", () => {
+  const index = totalForms.value;
+  const newForm = emptyFormHtml.replace(/__prefix__/g, index);
+  container.insertAdjacentHTML("beforeend", newForm);
+  totalForms.value = Number(index) + 1;
+});
+
+container.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("remove-catch")) return;
+  const row = e.target.closest(".catch-row");
+  const isExisting = row.dataset.existing === "1";
+  if (isExisting) {
+    const del = row.querySelector('input[name$="-DELETE"]');
+    if (del) del.checked = true;
+    row.style.display = "none";
+  } else {
+    row.remove();
+    totalForms.value = container.querySelectorAll(".catch-row:not([style*='display: none'])").length;
+  }
+});
+</script>
+{% endblock %}
