@@ -92,7 +92,7 @@
                             {% with photo=catch.photos.first %}
                                 {% if photo %}
                                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                        <img src="{{ photo.photo.url }}" class="carus-img" alt="{{ catch.fish_type }}">
+                                        <img src="{{ photo.photo.url }}" class="carus-img lightbox-trigger" alt="{{ catch.fish_type }}">
                                         <div class="carousel-caption d-block">
                                             <h5>{{ catch.fish_type }}</h5>
                                             <p>{{ catch.weight|default:"—" }} kg</p>

@@ -22,7 +22,7 @@
   <div class="photo-grid">
     {% for photo in catch.photos.all %}
       <div class="photo-item">
-        <img src="{{ photo.photo.url }}" alt="{{ catch.fish_type }}">
+        <img src="{{ photo.photo.url }}" class="lightbox-trigger" alt="{{ catch.fish_type }}">
         {% if photo.caption %}<p class="photo-caption">{{ photo.caption }}</p>{% endif %}
       </div>
     {% endfor %}
