@@ -1,0 +1,4 @@
+[lint]
+ignore = ["RUF012"]
+
+exclude = ["**/migrations/*"]
