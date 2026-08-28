@@ -1,4 +1,18 @@
 services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./media:/app/media
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
   migrate:
     image: fishing_register
     build:
@@ -28,8 +42,6 @@ services:
         condition: service_completed_successfully
     volumes:
       - ./media:/app/media
-    ports:
-      - "8000:8000"
     environment:
       DEBUG: "False"
       SECRET_KEY: "${SECRET_KEY}"
@@ -56,3 +68,5 @@ services:
 
 volumes:
   db-data:
+  caddy_data:
+  caddy_config:
