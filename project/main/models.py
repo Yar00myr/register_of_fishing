@@ -4,7 +4,7 @@ import os
 from collections import defaultdict
 from decimal import Decimal
 from django.db import models
-from django.db.models import F, DecimalField, Sum, Count
+from django.db.models import DecimalField, Sum, Count
 
 COUNTRIES_FILE = os.path.join(os.path.dirname(__file__), "data/country.json")
 

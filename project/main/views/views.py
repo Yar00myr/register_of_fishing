@@ -2,12 +2,12 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import Count, Sum
-from django.shortcuts import redirect, render, get_object_or_404
+from django.db.models import Count, Prefetch
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
-from ..forms import FishTypeForm, CatchPhotoFormSet
-from ..models import FishingTrip, FishType, Catch
+from ..forms import FishTypeForm
+from ..models import FishingTrip, FishType, Catch, CatchPhoto
 
 
 def login_page(request):
@@ -15,10 +15,9 @@ def login_page(request):
         return redirect("main:homepage")
 
     form = AuthenticationForm(request, data=request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            login(request, form.get_user())
-            return redirect("main:homepage")
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        return redirect("main:homepage")
 
     return render(request, "main/login.html", {"form": form})
 
@@ -48,7 +47,9 @@ def homepage_view(request):
 
     top_catches = (
         Catch.objects.filter(photos__isnull=False)
-        .prefetch_related("photos")
+        .prefetch_related(
+            Prefetch("photos", queryset=CatchPhoto.objects.order_by("uploaded_at"))
+        )
         .order_by("-weight")
         .distinct()[:3]
     )
