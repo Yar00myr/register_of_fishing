@@ -15,10 +15,9 @@ def login_page(request):
         return redirect("main:homepage")
 
     form = AuthenticationForm(request, data=request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            login(request, form.get_user())
-            return redirect("main:homepage")
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        return redirect("main:homepage")
 
     return render(request, "main/login.html", {"form": form})
 
