@@ -1,0 +1,38 @@
+<div class="photo-form-row" data-formset-row data-existing="{% if f.instance.pk %}1{% else %}0{% endif %}">
+  {{ f.id }}
+  {% if f.instance.pk and f.instance.photo %}
+    <img src="{{ f.instance.photo.url }}" class="photo-thumb" alt="">
+  {% endif %}
+  <div class="photo-form-fields">
+    {% if f.instance.pk and f.instance.photo %}
+      <div class="photo-field">
+        <div class="replace-photo-wrap">
+          <button type="button" class="btn-replace-photo">↺ Replace photo</button>
+          <div class="replace-input d-none">
+            <label class="field-label">New photo</label>
+            {{ f.photo }}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="photo-field">
+        <label class="field-label">Photo</label>
+        {{ f.photo }}
+      </div>
+    {% endif %}
+    <div class="photo-field">
+      <label class="field-label">Caption (optional)</label>
+      {{ f.caption }}
+    </div>
+  </div>
+  <div class="photo-row-actions">
+    {% if f.instance.pk %}
+      <label class="delete-btn" title="Delete photo">
+        {{ f.DELETE }}
+        🗑
+      </label>
+    {% else %}
+      <button type="button" class="remove-btn" data-formset-remove title="Remove">✕</button>
+    {% endif %}
+  </div>
+</div>

@@ -2,12 +2,12 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import Count, Sum
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
-from ..forms import FishTypeForm, CatchPhotoFormSet
-from ..models import FishingTrip, FishType, Catch
+from ..forms import FishTypeForm
+from ..models import FishType
+from ..selectors import get_country_stats, get_overall_stats, get_top_catches
 
 
 def login_page(request):
@@ -15,10 +15,9 @@ def login_page(request):
         return redirect("main:homepage")
 
     form = AuthenticationForm(request, data=request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            login(request, form.get_user())
-            return redirect("main:homepage")
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        return redirect("main:homepage")
 
     return render(request, "main/login.html", {"form": form})
 
@@ -29,44 +28,19 @@ def logout_page(request):
     return redirect("main:login")
 
 
-@login_required(login_url="main:login")
+@login_required
 def homepage_view(request):
-    fish_types = FishType.objects.order_by("name")
-    fish_type_form = FishTypeForm()
-    stats = FishingTrip.total_stats()
-
-    trips_by_country = dict(
-        FishingTrip.objects.values("country_code")
-        .annotate(count=Count("id"))
-        .values_list("country_code", "count")
-    )
-    fish_by_country = dict(
-        FishingTrip.objects.values("country_code")
-        .annotate(total=Count("catches"))
-        .values_list("country_code", "total")
-    )
-
-    top_catches = (
-        Catch.objects.filter(photos__isnull=False)
-        .prefetch_related("photos")
-        .order_by("-weight")
-        .distinct()[:3]
-    )
-
     context = {
-        "fish_types": fish_types,
-        "fish_type_form": fish_type_form,
-        "total_fish": stats["total_fish"],
-        "total_weight": stats["total_weight"],
-        "trips_by_country": trips_by_country,
-        "fish_by_country": fish_by_country,
-        "total_trips_count": FishingTrip.objects.count(),
-        "top_catches": top_catches,
+        "fish_types": FishType.objects.all(), 
+        "fish_type_form": FishTypeForm(),
+        "stats": get_overall_stats(),
+        "country_stats": get_country_stats(),
+        "top_catches": get_top_catches(),
     }
-    return render(request, "main/homepage.html", context=context)
+    return render(request, "main/homepage.html", context)
 
 
-@login_required(login_url="main:login")
+@login_required
 @require_POST
 def new_fish_type(request):
     form = FishTypeForm(request.POST)

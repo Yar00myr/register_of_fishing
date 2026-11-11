@@ -6,7 +6,7 @@
  
         <div class="stat-card">
             <p class="stat-label">🎣 Total Fish Caught</p>
-            <p class="stat-value fish">{{ total_fish }}</p>
+            <p class="stat-value fish">{{ stats.total_fish }}</p>
  
             <div class="mt-3">
                 <div class="dropdown">
@@ -16,11 +16,11 @@
                         <i class="bi bi-geo-alt me-1"></i>Fish by Country
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="fishDropdown">
-                        {% for code, count in fish_by_country.items %}
+                        {% for row in country_stats %}
                             <li>
                                 <span class="dropdown-item d-flex justify-content-between align-items-center">
-                                    <span>{{ code }}</span>
-                                    <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                                    <span>{{ row.country_code }}</span>
+                                    <span class="badge bg-primary rounded-pill">{{ row.fish }}</span>
                                 </span>
                             </li>
                         {% empty %}
@@ -34,7 +34,7 @@
         <!-- Trips card -->
         <div class="stat-card">
             <p class="stat-label">🗓 Total Fishing Trips</p>
-            <p class="stat-value trips">{{ total_trips_count }}</p>
+            <p class="stat-value trips">{{ stats.total_trips }}</p>
  
             <div class="mt-3">
                 <div class="dropdown">
@@ -44,11 +44,11 @@
                         <i class="bi bi-geo-alt me-1"></i>Trips by Country
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="tripsDropdown">
-                        {% for code, count in trips_by_country.items %}
+                        {% for row in country_stats %}
                             <li>
                                 <span class="dropdown-item d-flex justify-content-between align-items-center">
-                                    <span>{{ code }}</span>
-                                    <span class="badge bg-warning rounded-pill">{{ count }}</span>
+                                    <span>{{ row.country_code }}</span>
+                                    <span class="badge bg-warning rounded-pill">{{ row.trips }}</span>
                                 </span>
                             </li>
                         {% empty %}
@@ -62,7 +62,7 @@
         <!-- Weight card -->
         <div class="stat-card">
             <p class="stat-label">⚖️ Total Weight</p>
-            <p class="stat-value weight">{{ total_weight|floatformat:2 }} <small style="font-size:1.25rem;opacity:.7">kg</small></p>
+            <p class="stat-value weight">{{ stats.total_weight|floatformat:2 }} <small class="stat-unit">kg</small></p>
         </div>
  
     </div>
@@ -75,30 +75,34 @@
                 <div id="catchCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
                         {% for catch in top_catches %}
-                            {% if catch.photo %}
-                                <button type="button" data-bs-target="#catchCarousel"
-                                        data-bs-slide-to="{{ forloop.counter0 }}"
-                                        class="{% if forloop.first %}active{% endif %}"
-                                        aria-current="{% if forloop.first %}true{% endif %}"
-                                        aria-label="Slide {{ forloop.counter }}"></button>
-                            {% endif %}
+                            {% with photo=catch.photos.first %}
+                                {% if photo %}
+                                    <button type="button" data-bs-target="#catchCarousel"
+                                            data-bs-slide-to="{{ forloop.counter0 }}"
+                                            class="{% if forloop.first %}active{% endif %}"
+                                            aria-current="{% if forloop.first %}true{% endif %}"
+                                            aria-label="Slide {{ forloop.counter }}"></button>
+                                {% endif %}
+                            {% endwith %}
                         {% endfor %}
                     </div>
- 
+
                     <div class="carousel-inner">
                         {% for catch in top_catches %}
-                            {% if catch.photo %}
-                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                    <img src="{{ catch.photo.url }}" class="carus-img" alt="{{ catch.fish_type }}">
-                                    <div class="carousel-caption d-block">
-                                        <h5>{{ catch.fish_type }}</h5>
-                                        <p>{{ catch.weight|default:"—" }} kg</p>
+                            {% with photo=catch.photos.first %}
+                                {% if photo %}
+                                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                        <img src="{{ photo.photo.url }}" class="carus-img lightbox-trigger" alt="{{ catch.fish_type }}">
+                                        <div class="carousel-caption d-block">
+                                            <h5>{{ catch.fish_type }}</h5>
+                                            <p>{{ catch.weight|default:"—" }} kg</p>
+                                        </div>
                                     </div>
-                                </div>
-                            {% endif %}
+                                {% endif %}
+                            {% endwith %}
                         {% endfor %}
                     </div>
- 
+
                     <button class="carousel-control-prev" type="button"
                             data-bs-target="#catchCarousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

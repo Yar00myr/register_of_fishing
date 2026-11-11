@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -57,33 +58,19 @@
         {% block content %}{% endblock %}
     </main>
  
-    {% block footer %}{% endblock %}
- 
+        {% block footer %}{% endblock %}
+
+    <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+        <img id="lightboxImg" alt="">
+    </div>
+
     {% block scripts %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            const html = document.documentElement;
-            const btn  = document.getElementById('themeToggle');
-            const icon = document.getElementById('themeIcon');
-            const KEY  = 'fishing-theme';
- 
-            function applyTheme(theme) {
-                html.setAttribute('data-theme', theme);
-                icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
-                btn.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-            }
- 
-            const stored = localStorage.getItem(KEY);
-            const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(stored || (sysDark ? 'dark' : 'light'));
- 
-            btn.addEventListener('click', () => {
-                const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                applyTheme(next);
-                localStorage.setItem(KEY, next);
-            });
-        </script>
+        <script src="{% static 'js/theme.js' %}"></script>
+        <script src="{% static 'js/lightbox.js' %}"></script>
     {% endblock %}
+    {% block page_scripts %}{% endblock %}
 </body>
 </html>
 
