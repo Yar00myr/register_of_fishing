@@ -1,15 +1,6 @@
-import json
-import os
-
 from django.db import models
 
-COUNTRIES_FILE = os.path.join(os.path.dirname(__file__), "data/country.json")
-
-with open(COUNTRIES_FILE, encoding="utf-8") as f:
-    _countries_data = json.load(f)
-
-COUNTRY_CHOICES = [(c["code"], c["name"]) for c in _countries_data]
-_COUNTRY_MAP = {c["code"]: c["name"] for c in _countries_data}
+from .countries import get_country_choices, get_country_name
 
 
 def catch_photo_upload_path(instance: "CatchPhoto", filename: str) -> str:
@@ -18,7 +9,9 @@ def catch_photo_upload_path(instance: "CatchPhoto", filename: str) -> str:
 
 class FishingTrip(models.Model):
     name = models.CharField(max_length=100, blank=True, default="")
-    country_code = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default="UA")
+    country_code = models.CharField(
+        max_length=2, choices=get_country_choices, default="UA"
+    )
     date = models.DateField()
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -29,7 +22,7 @@ class FishingTrip(models.Model):
 
     @property
     def country_name(self) -> str:
-        return _COUNTRY_MAP.get(self.country_code, self.country_code)
+        return get_country_name(self.country_code)
 
     def __str__(self) -> str:
         label = self.name or self.country_name
