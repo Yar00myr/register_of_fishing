@@ -1,24 +1,16 @@
 import pytest
 
-from decimal import Decimal
 from datetime import date
-from django.contrib.auth.models import User
+from decimal import Decimal
 
-from main.models import FishingTrip, FishType, Catch
+from django.contrib.auth import get_user_model
 
+from main.models import Catch, FishingTrip, FishType
 
-@pytest.fixture
-def user(db):
-    return User.objects.create_user(username="testuser", password="testpass")
-
-
-@pytest.fixture
-def auth_client(client, user):
-    client.login(username="testuser", password="testpass")
-    return client
 
 @pytest.fixture(autouse=True)
 def override_staticfiles(settings):
+    """Templates use {% static %}, but collectstatic is not run in tests."""
     settings.STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -27,6 +19,26 @@ def override_staticfiles(settings):
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
+
+
+@pytest.fixture(autouse=True)
+def fast_password_hasher(settings):
+    """MD5 is insecure but ~100x faster than PBKDF2, which is fine for tests."""
+    settings.PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
+
+
+@pytest.fixture
+def user(db):
+    return get_user_model().objects.create_user(
+        username="testuser", password="testpass"
+    )
+
+
+@pytest.fixture
+def auth_client(client, user):
+    client.force_login(user)
+    return client
+
 
 @pytest.fixture
 def fish_type(db):
