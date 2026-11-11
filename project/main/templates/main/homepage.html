@@ -17,7 +17,7 @@
                 aria-expanded="false"
                 aria-controls="fishSectionCollapse">
             🎣 Fish Management
-            <i class="bi bi-chevron-down" id="fishChevron" style="font-size:.8rem;transition:transform .2s"></i>
+            <i class="bi bi-chevron-down chevron-toggle" id="fishChevron"></i>
         </button>
  
         <div class="collapse fish-collapse-body" id="fishSectionCollapse">
@@ -42,14 +42,9 @@
         </div>
     </div>
 </footer>
- 
-<script>
-    const collapse = document.getElementById('fishSectionCollapse');
-    const chevron  = document.getElementById('fishChevron');
-    if (collapse && chevron) {
-        collapse.addEventListener('show.bs.collapse', () => chevron.style.transform = 'rotate(180deg)');
-        collapse.addEventListener('hide.bs.collapse', () => chevron.style.transform = 'rotate(0deg)');
-    }
-</script>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'js/fish_management.js' %}"></script>
 {% endblock %}
 

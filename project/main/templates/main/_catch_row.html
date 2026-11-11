@@ -1,0 +1,15 @@
+<div class="catch-row" data-formset-row data-existing="{% if f.instance.pk %}1{% else %}0{% endif %}">
+  {{ f.id }}
+  <div class="catch-row-fields">
+    <div class="catch-field">
+      <label class="form-label">{{ f.fish_type.label }}</label>
+      {{ f.fish_type }}
+    </div>
+    <div class="catch-field">
+      <label class="form-label">{{ f.weight.label }}</label>
+      {{ f.weight }}
+    </div>
+  </div>
+  <button type="button" class="remove-catch" data-formset-remove aria-label="Remove">✕</button>
+  {{ f.DELETE }}
+</div>
