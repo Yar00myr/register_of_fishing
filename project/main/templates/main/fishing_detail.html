@@ -29,12 +29,12 @@
       </tr>
     </thead>
     <tbody>
-      {% for catch in grouped_catches %}
+      {% for catch in catch_summary.rows %}
         <tr>
           <td>{{ catch.fish_type }}</td>
           <td>{{ catch.amount }}</td>
           <td>{{ catch.weights|join:", "|default:"—" }}</td>
-          <td>{{ catch.total_weight }}</td>
+          <td>{{ catch.total_weight|floatformat:2 }}</td>
         </tr>
       {% empty %}
         <tr><td colspan="4" class="text-center text-muted">No catches yet</td></tr>
@@ -43,9 +43,9 @@
     <tfoot class="table-secondary">
       <tr>
         <th>Totals</th>
-        <td><strong>{{ trip.total_fish_amount }}</strong></td>
+        <td><strong>{{ catch_summary.total_amount }}</strong></td>
         <td></td>
-        <td><strong>{{ trip.total_weight|floatformat:2 }} kg</strong></td>
+        <td><strong>{{ catch_summary.total_weight|floatformat:2 }} kg</strong></td>
       </tr>
     </tfoot>
   </table>
@@ -74,18 +74,18 @@
       {% endif %}
     </div>
   {% empty %}
-    <p class="text-muted" style="font-size:.875rem;">No catches recorded</p>
+    <p class="text-muted text-small">No catches recorded</p>
   {% endfor %}
 </div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border);">
+    <div class="modal-content modal-themed">
       <div class="modal-header border-0">
-        <h5 class="modal-title" style="color: var(--text-primary);">Delete Fishing Trip</h5>
+        <h5 class="modal-title">Delete Fishing Trip</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body" style="color: var(--text-secondary);">
+       <div class="modal-body">
         Are you sure you want to delete the trip to <strong>{{ trip.country_name }}</strong> on <strong>{{ trip.date }}</strong>?
       </div>
       <div class="modal-footer border-0">
